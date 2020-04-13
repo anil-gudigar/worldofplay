@@ -1,2 +1,6 @@
 rootProject.name='worldofplay'
 include ':app'
+include ':core'
+include ':login'
+include ':stories'
+include ':stylekit'
