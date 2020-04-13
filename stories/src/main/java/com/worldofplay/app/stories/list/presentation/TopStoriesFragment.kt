@@ -5,13 +5,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.worldofplay.app.stories.R
 import com.worldofplay.app.stories.list.presentation.adapter.TopStoriesAdapter
+import com.worldofplay.app.stories.list.presentation.callbacks.PaginationListener
+import com.worldofplay.app.stories.list.presentation.callbacks.PaginationListener.Companion.PAGE_SIZE
 import com.worldofplay.app.stories.list.viewmodel.TopStoriesViewModel
 import com.worldofplay.core.di.Injectable
 import com.worldofplay.core.di.injectViewModel
@@ -52,6 +55,26 @@ class TopStoriesFragment : Fragment(), Injectable {
 
     private fun initUI() {
         activity?.let {
+            val layoutManager = LinearLayoutManager(it)
+            topStoriesList.layoutManager = layoutManager
+            topStoriesList.run {
+                topStoriesList.layoutManager = layoutManager
+                topStoriesList.addOnScrollListener(object : PaginationListener(layoutManager) {
+                    override fun loadMoreItems() {
+                        topStoriesViewModel.isLoading = true;
+                        topStoriesViewModel.currentPage++
+                        loadNextPage()
+                    }
+
+                    override fun isLastPage(): Boolean {
+                        return topStoriesViewModel.isLastPage
+                    }
+
+                    override fun isLoading(): Boolean {
+                        return topStoriesViewModel.isLoading
+                    }
+                })
+            }
             topStoriesAdapter = TopStoriesAdapter(ArrayList<String>(), it)
             topStoriesAdapter?.let {
                 topStoriesList.adapter = it
@@ -59,8 +82,16 @@ class TopStoriesFragment : Fragment(), Injectable {
         }
     }
 
+    fun loadNextPage() {
+        topStoriesViewModel.getNextPageList()?.let {
+            topStoriesAdapter.items.addAll(it)
+            topStoriesAdapter.notifyDataSetChanged()
+            topStoriesViewModel.isLoading = false
+        }
+    }
+
     private fun setData(topStories: ArrayList<String>) {
-        topStoriesAdapter.items = topStories
+        topStoriesAdapter.items.addAll(topStories.subList(0, PAGE_SIZE))
         topStoriesAdapter.notifyDataSetChanged()
     }
 
@@ -88,7 +119,6 @@ class TopStoriesFragment : Fragment(), Injectable {
 
     private fun observeTopStoriesvalue() {
         topStoriesViewModel.successData.observe(viewLifecycleOwner, Observer {
-            Log.i("Anil", " Top Stories:" + it.toString())
             setData(it)
         })
     }
