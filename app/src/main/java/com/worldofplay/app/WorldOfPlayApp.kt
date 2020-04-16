@@ -1,5 +1,6 @@
 package com.worldofplay.app
 
+import com.facebook.stetho.Stetho
 import com.worldofplay.app.di.AppInjector
 import com.worldofplay.core.BaseApp
 import dagger.android.AndroidInjector
@@ -14,8 +15,16 @@ class WorldOfPlayApp : BaseApp(), HasAndroidInjector  {
     override fun onCreate() {
         super.onCreate()
         AppInjector.init(this)
+
+        initializeStetho()
     }
 
     override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
+
+    private fun initializeStetho() {
+        //Stetho helps debug network calls and database / preference values
+        if (BuildConfig.DEBUG) Stetho.initializeWithDefaults(this)
+    }
+
 
 }

@@ -51,6 +51,7 @@ buildscript {
         testCoreVersion = '1.2.0'
         testRunnerVersion = '1.2.0'
         testRulesVersion = '1.2.0'
+        navVersion = '1.0.0-alpha01'
     }
 
     repositories {

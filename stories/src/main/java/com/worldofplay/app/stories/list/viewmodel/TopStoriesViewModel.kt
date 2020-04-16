@@ -2,6 +2,7 @@ package com.worldofplay.app.stories.list.viewmodel
 
 import android.app.Application
 import android.util.Log
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
@@ -10,6 +11,7 @@ import com.worldofplay.app.stories.list.presentation.callbacks.PaginationListene
 import com.worldofplay.app.stories.list.presentation.callbacks.PaginationListener.Companion.PAGE_START
 import com.worldofplay.app.stories.list.usecases.TopStoriesUsecase
 import com.worldofplay.core.data.Result
+import com.worldofplay.core.data.SingleLiveEvent
 import java.util.*
 import javax.inject.Inject
 
@@ -22,12 +24,12 @@ class TopStoriesViewModel @Inject constructor(application: Application) : ViewMo
     var totalPage = 10
     var isLoading = false
     var itemCount = 0
-    val errorMessageData: MutableLiveData<String> = MutableLiveData()
-    val loadingData: MutableLiveData<Boolean> = MutableLiveData()
-    val successData: MutableLiveData<TopStories> = MutableLiveData()
+    val errorMessageData: SingleLiveEvent<String> = SingleLiveEvent()
+    val loadingData: SingleLiveEvent<Boolean> = SingleLiveEvent()
+    val successData: SingleLiveEvent<TopStories> = SingleLiveEvent()
 
-    fun getTopStories() {
-        topStoriesUsecase.getTopStories().observeForever(Observer { result ->
+    fun getTopStories(lifecycleOwner: LifecycleOwner) {
+        topStoriesUsecase.getTopStories().observe(lifecycleOwner,Observer { result ->
             when (result.status) {
                 Result.Status.SUCCESS -> {
                     loadingData.postValue(false)

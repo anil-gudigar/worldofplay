@@ -2,4 +2,8 @@
 <resources>
     <string name="somehing_wentwrong">Something went wrong</string>
     <string name="topstories">Top Stories</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="stories">Stories</string>
 </resources>
