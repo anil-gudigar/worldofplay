@@ -1,15 +1,18 @@
 package com.worldofplay.app.stories.list.presentation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.worldofplay.app.stories.R
+import com.worldofplay.app.stories.details.domain.StoriesResponse
 import com.worldofplay.app.stories.details.viewmodel.StoriesViewModel
 import com.worldofplay.app.stories.list.presentation.adapter.TopStoriesAdapter
 import com.worldofplay.app.stories.list.presentation.callbacks.PaginationListener
@@ -47,11 +50,11 @@ class TopStoriesFragment : Fragment(), Injectable {
 
         observeTopStoriesvalue()
 
+        observeStoriesvalue()
+
         observeProgress()
 
         observeError(view)
-
-        observeStoriesQ()
 
         topStoriesViewModel.getTopStories()
     }
@@ -59,6 +62,11 @@ class TopStoriesFragment : Fragment(), Injectable {
     private fun initUI() {
         activity?.let {
             val layoutManager = LinearLayoutManager(it)
+            val dividerItemDecoration = DividerItemDecoration(
+                topStoriesList.getContext(),
+                layoutManager.orientation
+            )
+            topStoriesList.addItemDecoration(dividerItemDecoration)
             topStoriesList.layoutManager = layoutManager
             topStoriesList.run {
                 topStoriesList.layoutManager = layoutManager
@@ -78,7 +86,7 @@ class TopStoriesFragment : Fragment(), Injectable {
                     }
                 })
             }
-            topStoriesAdapter = TopStoriesAdapter(ArrayList<String>(), it)
+            topStoriesAdapter = TopStoriesAdapter(ArrayList<StoriesResponse>(), it)
             topStoriesAdapter?.let {
                 topStoriesList.adapter = it
             }
@@ -87,28 +95,16 @@ class TopStoriesFragment : Fragment(), Injectable {
 
     fun loadNextPage() {
         topStoriesViewModel.getNextPageList()?.let {
-            topStoriesAdapter.items.addAll(it)
-            topStoriesAdapter.notifyDataSetChanged()
-            topStoriesViewModel.isLoading = false
-            updateStoriesQ(it)
+            updateStories(it)
         }
     }
 
-    private fun setData(topStories: ArrayList<String>) {
-        topStoriesAdapter.items.addAll(topStories.subList(0, PAGE_SIZE))
-        topStoriesAdapter.notifyDataSetChanged()
-        updateStoriesQ(topStories.subList(0, PAGE_SIZE))
+    private fun setTopStoriesData(topStories: ArrayList<String>) {
+        updateStories(topStories.subList(0, PAGE_SIZE))
     }
 
-    private fun updateStoriesQ(topStories: MutableList<String>) {
-        storiesViewModel.queue.addAll(topStories.subList(0, PAGE_SIZE))
-        storiesViewModel.storiesQueueUpdated.postValue(true)
-    }
-
-    private fun observeStoriesQ(){
-        storiesViewModel.storiesQueueUpdated.observe(viewLifecycleOwner, Observer {
-                activity?.applicationContext?.let { it1 -> storiesViewModel.getAllStories(it1) }
-        })
+    private fun updateStories(topStories: MutableList<String>) {
+        storiesViewModel.getAllStories(topStories.subList(0, PAGE_SIZE))
     }
 
     private fun observeError(view: View) {
@@ -116,10 +112,26 @@ class TopStoriesFragment : Fragment(), Injectable {
             Snackbar.make(view, getString(R.string.somehing_wentwrong), Snackbar.LENGTH_SHORT)
                 .show()
         })
+        storiesViewModel.errorMessageData.observe(viewLifecycleOwner, Observer {
+            Snackbar.make(view, getString(R.string.somehing_wentwrong), Snackbar.LENGTH_SHORT)
+                .show()
+        })
     }
 
     private fun observeProgress() {
-        topStoriesViewModel.loadingData.observe(viewLifecycleOwner, Observer {
+       /* topStoriesViewModel.loadingData.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                true -> {
+                    topStoriesList.visibility = View.GONE
+                    progressBar.visibility = View.VISIBLE
+                }
+                false -> {
+                    topStoriesList.visibility = View.VISIBLE
+                    progressBar.visibility = View.GONE
+                }
+            }
+        })*/
+        storiesViewModel.loadingData.observe(viewLifecycleOwner, Observer {
             when (it) {
                 true -> {
                     topStoriesList.visibility = View.GONE
@@ -135,7 +147,19 @@ class TopStoriesFragment : Fragment(), Injectable {
 
     private fun observeTopStoriesvalue() {
         topStoriesViewModel.successData.observe(viewLifecycleOwner, Observer {
-            setData(it)
+            setTopStoriesData(it)
         })
+    }
+
+    private fun observeStoriesvalue() {
+        storiesViewModel.successData.observe(viewLifecycleOwner, Observer {
+            Log.i("Anil", "observeStoriesvalue :" + it.toString())
+            setDataUI(it)
+        })
+    }
+
+    private fun setDataUI(it: StoriesResponse) {
+        topStoriesAdapter.items.add(it)
+        topStoriesAdapter.notifyDataSetChanged()
     }
 }
