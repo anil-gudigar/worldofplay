@@ -7,6 +7,6 @@ import dagger.android.ContributesAndroidInjector
 
 @Module
 abstract class MainActivityModule {
-    @ContributesAndroidInjector(modules = [TopStoriesBuildersModule::class])
+    @ContributesAndroidInjector(modules = [TopStoriesBuildersModule::class,TopStoriesBuildersModule::class])
     abstract fun contributeMainActivity(): MainActivity
 }

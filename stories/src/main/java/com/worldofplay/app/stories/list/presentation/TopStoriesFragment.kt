@@ -1,7 +1,6 @@
 package com.worldofplay.app.stories.list.presentation
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.worldofplay.app.stories.R
 import com.worldofplay.app.stories.details.viewmodel.StoriesViewModel
@@ -43,7 +41,7 @@ class TopStoriesFragment : Fragment(), Injectable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         topStoriesViewModel = injectViewModel(viewModelFactory)
-        storiesViewModel = injectViewModel(viewModelFactory)
+        storiesViewModel =   injectViewModel(viewModelFactory)
 
         initUI()
 
@@ -52,6 +50,8 @@ class TopStoriesFragment : Fragment(), Injectable {
         observeProgress()
 
         observeError(view)
+
+        observeStoriesQ()
 
         topStoriesViewModel.getTopStories()
     }
@@ -90,12 +90,25 @@ class TopStoriesFragment : Fragment(), Injectable {
             topStoriesAdapter.items.addAll(it)
             topStoriesAdapter.notifyDataSetChanged()
             topStoriesViewModel.isLoading = false
+            updateStoriesQ(it)
         }
     }
 
     private fun setData(topStories: ArrayList<String>) {
         topStoriesAdapter.items.addAll(topStories.subList(0, PAGE_SIZE))
         topStoriesAdapter.notifyDataSetChanged()
+        updateStoriesQ(topStories.subList(0, PAGE_SIZE))
+    }
+
+    private fun updateStoriesQ(topStories: MutableList<String>) {
+        storiesViewModel.queue.addAll(topStories.subList(0, PAGE_SIZE))
+        storiesViewModel.storiesQueueUpdated.postValue(true)
+    }
+
+    private fun observeStoriesQ(){
+        storiesViewModel.storiesQueueUpdated.observe(viewLifecycleOwner, Observer {
+                activity?.applicationContext?.let { it1 -> storiesViewModel.getAllStories(it1) }
+        })
     }
 
     private fun observeError(view: View) {

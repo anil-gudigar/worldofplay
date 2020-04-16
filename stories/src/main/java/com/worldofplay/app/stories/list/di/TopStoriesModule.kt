@@ -28,8 +28,8 @@ open class TopStoriesModule {
 
     @Singleton
     @Provides
-    fun provideTopStoriesRemoteDataSource(rpmService: TopStoriesService): TopStoriesRemoteDataSource {
-        return TopStoriesRemoteDataSource(rpmService)
+    fun provideTopStoriesRemoteDataSource(topStoriesService : TopStoriesService): TopStoriesRemoteDataSource {
+        return TopStoriesRemoteDataSource(topStoriesService)
     }
 
     @Singleton

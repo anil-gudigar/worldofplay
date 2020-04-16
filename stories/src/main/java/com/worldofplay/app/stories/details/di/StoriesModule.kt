@@ -1,5 +1,9 @@
 package com.worldofplay.app.stories.details.di
 
+import com.worldofplay.app.stories.details.data.remote.StoriesRemoteDataSource
+import com.worldofplay.app.stories.details.data.remote.StoriesRepository
+import com.worldofplay.app.stories.details.data.remote.StoriesService
+import com.worldofplay.app.stories.details.usecases.StoriesUsecase
 import com.worldofplay.app.stories.list.data.remote.TopStoriesRemoteDataSource
 import com.worldofplay.app.stories.list.data.remote.TopStoriesRepository
 import com.worldofplay.app.stories.list.data.remote.TopStoriesService
@@ -16,26 +20,26 @@ open class StoriesModule {
 
     @Singleton
     @Provides
-    fun provideStoriesUsecase(repository: TopStoriesRepository): TopStoriesUsecase {
-        return TopStoriesUsecase(repository)
+    fun provideStoriesUsecase(repository: StoriesRepository): StoriesUsecase {
+        return StoriesUsecase(repository)
     }
 
     @Singleton
     @Provides
-    fun provideTopStoriesRepository(remoteDataSource: TopStoriesRemoteDataSource): TopStoriesRepository {
-        return TopStoriesRepository(remoteDataSource)
+    fun provideStoriesRepository(remoteDataSource: StoriesRemoteDataSource): StoriesRepository {
+        return StoriesRepository(remoteDataSource)
     }
 
     @Singleton
     @Provides
-    fun provideTopStoriesRemoteDataSource(rpmService: TopStoriesService): TopStoriesRemoteDataSource {
-        return TopStoriesRemoteDataSource(rpmService)
+    fun provideStoriesRemoteDataSource(storiesService: StoriesService): StoriesRemoteDataSource {
+        return StoriesRemoteDataSource(storiesService)
     }
 
     @Singleton
     @Provides
-    fun provideTopStoriesService(@RetrofitStories retrofit: Retrofit): TopStoriesService {
-        return retrofit.create<TopStoriesService>(TopStoriesService::class.java)
+    fun provideStoriesService(@RetrofitStories retrofit: Retrofit): StoriesService {
+        return retrofit.create<StoriesService>(StoriesService::class.java)
     }
 
 }

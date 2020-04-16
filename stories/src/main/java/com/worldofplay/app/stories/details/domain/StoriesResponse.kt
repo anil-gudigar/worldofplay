@@ -10,4 +10,8 @@ data class StoriesResponse(
     val title: String,
     val type: String,
     val url: String
-)
+){
+    override fun toString(): String {
+        return "StoriesResponse(`by`='$`by`', descendants=$descendants, id=$id, kids=$kids, score=$score, time=$time, title='$title', type='$type', url='$url')"
+    }
+}
