@@ -7,28 +7,26 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.worldofplay.app.login.R
 import com.worldofplay.app.login.domian.LoggedInUserView
 import com.worldofplay.app.login.viewmodel.LoginViewModel
 import com.worldofplay.app.login.viewmodel.LoginViewModelFactory
+import com.worldofplay.app.stylekit.themes.Themes
+import com.worldofplay.app.stylekit.themes.view.ThemesActivity
 import kotlinx.android.synthetic.main.activity_login.*
 
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : ThemesActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(R.style.AppTheme_DARK_BLUE)
         setContentView(R.layout.activity_login)
 
         val username = findViewById<EditText>(R.id.username)
@@ -36,10 +34,10 @@ class LoginActivity : AppCompatActivity() {
         val login = findViewById<Button>(R.id.login)
         val loading = findViewById<ProgressBar>(R.id.loading)
 
-        loginViewModel = ViewModelProviders.of(this,
+        loginViewModel = ViewModelProviders.of(
+            this,
             LoginViewModelFactory()
-        )
-            .get(LoginViewModel::class.java)
+        ).get(LoginViewModel::class.java)
 
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
             val loginState = it ?: return@Observer
@@ -48,13 +46,13 @@ class LoginActivity : AppCompatActivity() {
 
             if (loginState.usernameError != null) {
                 etUsernameLayout.error = getString(loginState.usernameError)
-            }else{
-                etUsernameLayout.error =""
+            } else {
+                etUsernameLayout.error = ""
             }
             if (loginState.passwordError != null) {
                 etPasswordLayout.error = getString(loginState.passwordError)
-            }else{
-                etPasswordLayout.error =""
+            } else {
+                etPasswordLayout.error = ""
             }
         })
 
@@ -105,6 +103,18 @@ class LoginActivity : AppCompatActivity() {
                 loginViewModel.login(username.text.toString(), password.text.toString())
             }
         }
+
+        switchTheme.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { compoundButton, b ->
+            mIsNightMode = b
+            compoundButton.postDelayed(Runnable {
+                 if (mIsNightMode) {
+                     delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
+                 } else {
+                     delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_NO
+                 }
+             }, 400)
+        })
+
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {

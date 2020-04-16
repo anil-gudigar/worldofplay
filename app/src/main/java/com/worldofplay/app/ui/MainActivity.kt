@@ -9,12 +9,13 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.worldofplay.app.R
+import com.worldofplay.app.stylekit.themes.view.ThemesActivity
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
 
-class MainActivity : AppCompatActivity() ,HasAndroidInjector{
+class MainActivity : ThemesActivity() ,HasAndroidInjector{
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
 
