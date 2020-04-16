@@ -8,4 +8,6 @@
     <dimen name="texrt_size_12sp">12sp</dimen>
     <dimen name="marhin_2dp">2dp</dimen>
     <dimen name="margin_2dp">2dp</dimen>
+    <dimen name="height_28dp">28dp</dimen>
+    <dimen name="width_28dp">28dp</dimen>
 </resources>

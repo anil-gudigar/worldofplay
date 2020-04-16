@@ -119,7 +119,7 @@ class TopStoriesFragment : Fragment(), Injectable {
     }
 
     private fun observeProgress() {
-       /* topStoriesViewModel.loadingData.observe(viewLifecycleOwner, Observer {
+        topStoriesViewModel.loadingData.observe(viewLifecycleOwner, Observer {
             when (it) {
                 true -> {
                     topStoriesList.visibility = View.GONE
@@ -130,16 +130,24 @@ class TopStoriesFragment : Fragment(), Injectable {
                     progressBar.visibility = View.GONE
                 }
             }
-        })*/
+        })
         storiesViewModel.loadingData.observe(viewLifecycleOwner, Observer {
             when (it) {
                 true -> {
-                    topStoriesList.visibility = View.GONE
-                    progressBar.visibility = View.VISIBLE
+                    if(topStoriesAdapter.items.size ==0){
+                        topStoriesList.visibility = View.GONE
+                        progressBar.visibility = View.VISIBLE
+                    }else{
+                        loadMoreProgressBar.visibility = View.VISIBLE
+                    }
                 }
                 false -> {
-                    topStoriesList.visibility = View.VISIBLE
-                    progressBar.visibility = View.GONE
+                    if(topStoriesAdapter.items.size ==0) {
+                        topStoriesList.visibility = View.VISIBLE
+                        progressBar.visibility = View.GONE
+                    }else{
+                        loadMoreProgressBar.visibility = View.GONE
+                    }
                 }
             }
         })
