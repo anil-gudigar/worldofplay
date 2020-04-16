@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.worldofplay.app.stories.R
+import com.worldofplay.app.stories.details.viewmodel.StoriesViewModel
 import com.worldofplay.app.stories.list.presentation.adapter.TopStoriesAdapter
 import com.worldofplay.app.stories.list.presentation.callbacks.PaginationListener
 import com.worldofplay.app.stories.list.presentation.callbacks.PaginationListener.Companion.PAGE_SIZE
@@ -25,6 +26,7 @@ import javax.inject.Inject
 class TopStoriesFragment : Fragment(), Injectable {
 
     lateinit var topStoriesViewModel: TopStoriesViewModel
+    lateinit var storiesViewModel: StoriesViewModel
     lateinit var topStoriesAdapter: TopStoriesAdapter
 
     @Inject
@@ -41,6 +43,7 @@ class TopStoriesFragment : Fragment(), Injectable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         topStoriesViewModel = injectViewModel(viewModelFactory)
+        storiesViewModel = injectViewModel(viewModelFactory)
 
         initUI()
 

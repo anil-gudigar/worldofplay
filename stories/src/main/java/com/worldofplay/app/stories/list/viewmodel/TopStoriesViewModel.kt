@@ -10,6 +10,7 @@ import com.worldofplay.app.stories.list.presentation.callbacks.PaginationListene
 import com.worldofplay.app.stories.list.presentation.callbacks.PaginationListener.Companion.PAGE_START
 import com.worldofplay.app.stories.list.usecases.TopStoriesUsecase
 import com.worldofplay.core.data.Result
+import java.util.*
 import javax.inject.Inject
 
 class TopStoriesViewModel @Inject constructor(application: Application) : ViewModel() {
@@ -21,7 +22,7 @@ class TopStoriesViewModel @Inject constructor(application: Application) : ViewMo
     var totalPage = 10
     var isLoading = false
     var itemCount = 0
-
+    val queue = LinkedList<String>()
     val errorMessageData: MutableLiveData<String> = MutableLiveData()
     val loadingData: MutableLiveData<Boolean> = MutableLiveData()
     val successData: MutableLiveData<TopStories> = MutableLiveData()
@@ -54,6 +55,7 @@ class TopStoriesViewModel @Inject constructor(application: Application) : ViewMo
         if (currentPage == totalPage){
             isLastPage = true
         }
+        successData.value?.subList(currentIndex,nextIndex)?.let { queue.addAll(it) }
         return successData.value?.subList(currentIndex,nextIndex)
     }
 }

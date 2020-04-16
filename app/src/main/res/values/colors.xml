@@ -14,7 +14,7 @@
     <!-- DARK_BLUE Theme -->
     <color name="primaryColorDarkBlue">#0e1d32</color>
     <color name="primaryLightColorDarkBlue">#1a293c</color>
-    <color name="primaryDarkColorDarkBlue">#0e2d32</color>
+    <color name="primaryDarkColorDarkBlue">#0e1d42</color>
     <color name="secondaryColorDarkBlue">#448AFF</color>
     <color name="secondaryLightColorDarkBlue">#89b3f8</color>
     <color name="secondaryDarkColorDarkBlue">#1a62da</color>
