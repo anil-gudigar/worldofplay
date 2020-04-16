@@ -72,7 +72,7 @@ class TopStoriesFragment : Fragment(), Injectable {
                 topStoriesList.layoutManager = layoutManager
                 topStoriesList.addOnScrollListener(object : PaginationListener(layoutManager) {
                     override fun loadMoreItems() {
-                        topStoriesViewModel.isLoading = true;
+                        topStoriesViewModel.isLoading = true
                         topStoriesViewModel.currentPage++
                         loadNextPage()
                     }
@@ -159,6 +159,7 @@ class TopStoriesFragment : Fragment(), Injectable {
     }
 
     private fun setDataUI(it: StoriesResponse) {
+        topStoriesViewModel.isLoading = false
         topStoriesAdapter.items.add(it)
         topStoriesAdapter.notifyDataSetChanged()
     }
