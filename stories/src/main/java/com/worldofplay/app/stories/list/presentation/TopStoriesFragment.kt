@@ -1,10 +1,12 @@
 package com.worldofplay.app.stories.list.presentation
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -58,10 +60,31 @@ class TopStoriesFragment : Fragment(), Injectable, ItemListener {
 
         observeError(view)
 
+        setUpPulltoRefresh()
+
+        setupInitialData()
+    }
+
+    private fun setupInitialData() {
         if (topStoriesViewModel.itemCount == 0) {
             topStoriesViewModel.getTopStories(viewLifecycleOwner)
-        }else{
+        } else {
             topStoriesViewModel.successData.value?.let { updateStories(it) }
+        }
+    }
+
+    private fun setUpPulltoRefresh() {
+        activity?.applicationContext?.let {
+            ContextCompat.getColor(
+                it,
+                R.color.primaryColorDarkBlue
+            )
+        }?.let { itemsswipetorefresh.setProgressBackgroundColorSchemeColor(it) }
+        itemsswipetorefresh.setColorSchemeColors(Color.WHITE)
+
+        itemsswipetorefresh.setOnRefreshListener {
+            itemsswipetorefresh.isRefreshing = true
+            topStoriesViewModel.getTopStories(viewLifecycleOwner)
         }
     }
 
@@ -95,6 +118,10 @@ class TopStoriesFragment : Fragment(), Injectable, ItemListener {
             topStoriesAdapter = TopStoriesAdapter(ArrayList<StoriesResponse>(), it, this)
             topStoriesAdapter?.let {
                 topStoriesList.adapter = it
+                topStoriesViewModel.allStories.value?.let { allStories ->
+                    topStoriesViewModel.loadingData.postValue(false)
+                    it.items = allStories as ArrayList<StoriesResponse>
+                }
             }
         }
     }
@@ -110,7 +137,7 @@ class TopStoriesFragment : Fragment(), Injectable, ItemListener {
     }
 
     private fun updateStories(topStories: MutableList<String>) {
-        storiesViewModel.getAllStories(viewLifecycleOwner,topStories.subList(0, PAGE_SIZE))
+        storiesViewModel.getAllStories(viewLifecycleOwner, topStories.subList(0, PAGE_SIZE))
     }
 
     private fun observeError(view: View) {
@@ -163,20 +190,20 @@ class TopStoriesFragment : Fragment(), Injectable, ItemListener {
 
     private fun observeTopStoriesvalue() {
         topStoriesViewModel.successData.observe(viewLifecycleOwner, Observer {
-            Log.i("Anil", " observeTopStoriesvalue :" + it.toString())
+            itemsswipetorefresh.isRefreshing = false
             setTopStoriesData(it)
         })
     }
 
     private fun observeStoriesvalue() {
         storiesViewModel.successData.observe(viewLifecycleOwner, Observer {
-            Log.i("Anil", "observeStoriesvalue :" + it.toString())
             setDataUI(it)
         })
     }
 
     private fun setDataUI(it: StoriesResponse) {
         topStoriesViewModel.isLoading = false
+        topStoriesViewModel.allStories.value?.add(it)
         topStoriesAdapter.items.add(it)
         topStoriesAdapter.notifyDataSetChanged()
     }
