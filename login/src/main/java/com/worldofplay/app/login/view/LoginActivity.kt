@@ -1,8 +1,8 @@
 package com.worldofplay.app.login.view
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -24,11 +24,9 @@ import kotlinx.android.synthetic.main.activity_login.*
 class LoginActivity : ThemesActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
+    override val layout: Int = R.layout.activity_login
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
-
+    override fun initUI() {
         val username = findViewById<EditText>(R.id.username)
         val password = findViewById<EditText>(R.id.password)
         val login = findViewById<Button>(R.id.login)
@@ -104,17 +102,21 @@ class LoginActivity : ThemesActivity() {
             }
         }
 
+        switchTheme.isChecked = mTheme == Themes.DARK_BLUE
         switchTheme.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { compoundButton, b ->
-            mIsNightMode = b
+            getPreferences(Context.MODE_PRIVATE).edit().putBoolean("nightMode", mIsNightMode)
+                .apply()
             compoundButton.postDelayed(Runnable {
-                 if (mIsNightMode) {
-                     delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
-                 } else {
-                     delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_NO
-                 }
-             }, 400)
+                if (b) {
+                    setTheme(Themes.getThemeId(Themes.DARK_BLUE))
+                    mPreferences.edit().putInt("themeId", Themes.DARK_BLUE).apply()
+                } else {
+                    setTheme(Themes.getThemeId(Themes.LIGHT_BLUE))
+                    mPreferences.edit().putInt("themeId", Themes.LIGHT_BLUE).apply()
+                }
+                recreate()
+            }, 400)
         })
-
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {

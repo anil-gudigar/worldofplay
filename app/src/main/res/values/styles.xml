@@ -1,2 +1,29 @@
 <resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/primaryColorDarkBlue</item>
+    </style>
+
+    <style name="AppTheme.LIGHT_BLUE" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/primaryColorLightBlue</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColorLightBlue</item>
+        <item name="colorAccent">@color/secondaryColorLightBlue</item>
+    </style>
+
+    <style name="AppTheme.DARK_BLUE" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/primaryColorDarkBlue</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColorDarkBlue</item>
+        <item name="colorAccent">@color/secondaryColorDarkBlue</item>
+    </style>
+
+
+    <!-- Base application theme. -->
+    <style name="AppTheme_NoTitle" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
 </resources>
