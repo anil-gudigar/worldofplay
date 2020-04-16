@@ -89,6 +89,7 @@ class TopStoriesFragment : Fragment(), Injectable, ItemListener {
     }
 
     private fun initUI() {
+
         activity?.let {
             val layoutManager = LinearLayoutManager(it)
             val dividerItemDecoration = DividerItemDecoration(
@@ -115,6 +116,7 @@ class TopStoriesFragment : Fragment(), Injectable, ItemListener {
                     }
                 })
             }
+
             topStoriesAdapter = TopStoriesAdapter(ArrayList<StoriesResponse>(), it, this)
             topStoriesAdapter?.let {
                 topStoriesList.adapter = it
@@ -210,6 +212,7 @@ class TopStoriesFragment : Fragment(), Injectable, ItemListener {
 
     override fun onClicked(storiesResponse: StoriesResponse) {
         val bundle = Bundle().apply {
+            putString("title", storiesResponse.title)
             putString("url", storiesResponse.url)
         }
         findNavController().navigate(R.id.navigation_stories, bundle)

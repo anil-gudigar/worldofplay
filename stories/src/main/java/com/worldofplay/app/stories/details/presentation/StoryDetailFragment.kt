@@ -13,7 +13,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.worldofplay.app.stories.R
 import kotlinx.android.synthetic.main.fragment_story_detail.*
 
-private const val ARG_PARAM = "url"
+private const val ARG_PARAM_URL = "url"
+private const val ARG_PARAM_TITLE = "title"
 
 /**
  * A simple [Fragment] subclass.
@@ -22,11 +23,13 @@ private const val ARG_PARAM = "url"
  */
 class StoryDetailFragment : Fragment() {
     private var url: String? = null
+    private var title: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            url = it.getString(ARG_PARAM)
+            url = it.getString(ARG_PARAM_URL)
+            title = it.getString(ARG_PARAM_TITLE)
         }
     }
 
@@ -34,6 +37,7 @@ class StoryDetailFragment : Fragment() {
         super.onResume()
         val activity = activity as AppCompatActivity?
         setHasOptionsMenu(true)
+        activity?.supportActionBar?.title = title
         activity?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
@@ -57,7 +61,6 @@ class StoryDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        data.text = url
         try {
             val webView = webview
             webView.loadUrl(url)

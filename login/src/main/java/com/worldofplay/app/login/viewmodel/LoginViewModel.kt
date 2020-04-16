@@ -1,15 +1,18 @@
 package com.worldofplay.app.login.viewmodel
 
+import android.R.attr
+import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import android.util.Patterns
 import com.worldofplay.app.login.R
 import com.worldofplay.app.login.data.LoginRepository
 import com.worldofplay.app.login.data.Result
 import com.worldofplay.app.login.domian.LoggedInUserView
 import com.worldofplay.app.login.domian.LoginFormState
 import com.worldofplay.app.login.domian.LoginResult
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
@@ -55,12 +58,18 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
         return if (username.contains('@')) {
             Patterns.EMAIL_ADDRESS.matcher(username).matches()
         } else {
-            username.isNotBlank()
+            false
         }
     }
 
     // A placeholder password validation check
     private fun isPasswordValid(password: String): Boolean {
-        return password.length > 5
+        val pattern: Pattern
+        val matcher: Matcher
+        val PASSWORD_PATTERN =
+            "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{4,}$"
+        pattern = Pattern.compile(PASSWORD_PATTERN)
+        matcher = pattern.matcher(password)
+        return (matcher.matches() && password.length > 8)
     }
 }

@@ -19,6 +19,7 @@ import com.worldofplay.app.login.R
 import com.worldofplay.app.login.domian.LoggedInUserView
 import com.worldofplay.app.login.viewmodel.LoginViewModel
 import com.worldofplay.app.login.viewmodel.LoginViewModelFactory
+import kotlinx.android.synthetic.main.activity_login.*
 
 
 class LoginActivity : AppCompatActivity() {
@@ -42,15 +43,18 @@ class LoginActivity : AppCompatActivity() {
 
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
             val loginState = it ?: return@Observer
-
             // disable login button unless both username / password is valid
             login.isEnabled = loginState.isDataValid
 
             if (loginState.usernameError != null) {
-                username.error = getString(loginState.usernameError)
+                etUsernameLayout.error = getString(loginState.usernameError)
+            }else{
+                etUsernameLayout.error =""
             }
             if (loginState.passwordError != null) {
-                password.error = getString(loginState.passwordError)
+                etPasswordLayout.error = getString(loginState.passwordError)
+            }else{
+                etPasswordLayout.error =""
             }
         })
 
@@ -104,14 +108,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {
-        val welcome = getString(R.string.welcome)
-        val displayName = model.displayName
-        // TODO : initiate successful logged in experience
-        Toast.makeText(
-            applicationContext,
-            "$welcome $displayName",
-            Toast.LENGTH_LONG
-        ).show()
         val intent = Intent("ACTION_EXECUTE")
         intent.setPackage(packageName)
         intent.putExtra("ACTION", "HOME")
