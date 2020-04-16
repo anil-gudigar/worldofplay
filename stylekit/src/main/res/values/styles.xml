@@ -4,6 +4,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorAccent">@color/primaryColorDarkBlue</item>
+        <item name="background">@android:color/white</item>
     </style>
 
     <style name="AppTheme.LIGHT_BLUE" parent="Theme.AppCompat.DayNight.DarkActionBar">
@@ -11,6 +12,7 @@
         <item name="colorPrimary">@color/primaryColorLightBlue</item>
         <item name="colorPrimaryDark">@color/primaryDarkColorLightBlue</item>
         <item name="colorAccent">@color/secondaryColorLightBlue</item>
+        <item name="background">@android:color/white</item>
     </style>
 
     <style name="AppTheme.DARK_BLUE" parent="Theme.AppCompat.DayNight.DarkActionBar">
@@ -18,6 +20,7 @@
         <item name="colorPrimary">@color/primaryColorDarkBlue</item>
         <item name="colorPrimaryDark">@color/primaryDarkColorDarkBlue</item>
         <item name="colorAccent">@color/secondaryColorDarkBlue</item>
+        <item name="background">@color/primaryColorDarkBlue</item>
     </style>
 
 

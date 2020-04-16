@@ -2,10 +2,11 @@ package com.worldofplay.app.stories.list.presentation
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -74,14 +75,12 @@ class TopStoriesFragment : Fragment(), Injectable, ItemListener {
     }
 
     private fun setUpPulltoRefresh() {
-        activity?.applicationContext?.let {
-            ContextCompat.getColor(
-                it,
-                R.color.primaryColorDarkBlue
-            )
-        }?.let { itemsswipetorefresh.setProgressBackgroundColorSchemeColor(it) }
+        val typedValue = TypedValue()
+        val theme = context?.theme
+        theme?.resolveAttribute(R.attr.colorAccent, typedValue, true)
+        @ColorInt val color = typedValue.data
+        itemsswipetorefresh.setProgressBackgroundColorSchemeColor(color)
         itemsswipetorefresh.setColorSchemeColors(Color.WHITE)
-
         itemsswipetorefresh.setOnRefreshListener {
             itemsswipetorefresh.isRefreshing = true
             topStoriesViewModel.getTopStories(viewLifecycleOwner)

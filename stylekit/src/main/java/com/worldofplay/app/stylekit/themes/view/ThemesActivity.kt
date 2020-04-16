@@ -20,7 +20,7 @@ abstract class ThemesActivity : AppCompatActivity() {
         mTheme = mPreferences.getInt("themeId", Themes.DEFAULT)
         setTheme(Themes.getThemeId(mTheme))
         setContentView(layout)
-        extractNightMode()
+        //extractNightMode()
         initUI()
     }
 
