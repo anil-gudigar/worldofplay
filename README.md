@@ -25,3 +25,6 @@ Clean Architecture, MVVM pattern. Used Databinding, Daager 2, Retrofit 2, OkHttp
     OkHttp 3\
     Room\
     Android X
+    
+
+![](https://github.com/anil-gudigar/worldofplay/blob/master/worldofplay.gif) 
